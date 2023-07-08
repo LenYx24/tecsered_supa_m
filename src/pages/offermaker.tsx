@@ -1,62 +1,79 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Database } from "lib/database.types";
+import type { Database } from "lib/database.types";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
-const offermaker = () => {
+const Offermaker = () => {
   const router = useRouter();
-  const [allItems, setAllItems] = useState<any>([]);
-  const [myItems, setMyItems] = useState<any>([]);
-  const [theirItems, setTheirItems] = useState<any>([]);
+  const [allItems, setAllItems] =
+    useState<Database["public"]["Tables"]["items"]["Row"][]>();
+  const [myItems, setMyItems] = useState<
+    Database["public"]["Tables"]["items"]["Row"][]
+  >([]);
+  const [theirItems, setTheirItems] = useState<
+    Database["public"]["Tables"]["items"]["Row"][]
+  >([]);
   const supabaseClient = useSupabaseClient<Database>();
-  function handleAllItemsClick(item: any) {
-    const newdata = allItems.filter((x: any) => x.id !== item.id);
+  function handleAllItemsClick(
+    item: Database["public"]["Tables"]["items"]["Row"]
+  ) {
+    const newdata = allItems?.filter((x) => x.id !== item.id);
     setAllItems(newdata);
     if (item.user_id === user?.id) {
-      setMyItems((prevstate: any) => [...prevstate, item]);
+      setMyItems((prevstate) => [...prevstate, item]);
     } else {
-      setTheirItems((prevstate: any) => [...prevstate, item]);
+      setTheirItems((prevstate) => [...prevstate, item]);
     }
   }
-  function handlePutBackClick(item) {
-    setAllItems((prevstate: any) => [...prevstate, item]);
+  function handlePutBackClick(
+    item: Database["public"]["Tables"]["items"]["Row"]
+  ) {
+    if (allItems !== undefined) {
+      const newitms = [...allItems, item];
+      setAllItems(newitms);
+    }
     if (item.user_id === user?.id) {
-      const newdata = myItems.filter((x: any) => x.id !== item.id);
+      const newdata = myItems.filter((x) => x.id !== item.id);
       setMyItems(newdata);
     } else {
-      const newdata = theirItems.filter((x: any) => x.id !== item.id);
+      const newdata = theirItems.filter((x) => x.id !== item.id);
       setTheirItems(newdata);
     }
   }
-  async function handleTradeRequest() {
+  function handleTradeRequest() {
     // új rekord a transcation táblában, a status pedig request lesz
     // a transitems táblába pedig fel kellene vinni azokat az itemeket amelyek kapcsolódnak a transactionhöz
     // myitems és theiritems tömbök id-jeit insertelem, és a most létrehozott transaction id-val
-    const initiator_id = user?.id;
-    const receiver_id = router.query.userid;
-    if (typeof initiator_id !== "string" || initiator_id === undefined) return;
-    if (typeof receiver_id !== "string" || receiver_id === undefined) return;
-    const req = await supabaseClient
-      .from("transactions")
-      .insert([
-        { initiator: initiator_id, receiver: receiver_id, status: "request" },
-      ]);
+    async function handle() {
+      const initiator_id = user?.id;
+      const receiver_id = router.query.userid;
+      if (typeof initiator_id !== "string" || initiator_id === undefined)
+        return;
+      if (typeof receiver_id !== "string" || receiver_id === undefined) return;
+      const req = await supabaseClient
+        .from("transactions")
+        .insert([
+          { initiator: initiator_id, receiver: receiver_id, status: "request" },
+        ]);
+    }
+    handle().catch((err) => console.error(err));
   }
   const user = useUser();
-  async function getitems() {
-    if (router.query.userid === undefined) return;
-    if (user === null) return;
-    const { data } = await supabaseClient
-      .from("items")
-      .select("*")
-      .in("user_id", [user.id, router.query.userid]);
-    setAllItems(data);
-    console.log(data);
-  }
+
   useEffect(() => {
-    getitems();
-  }, []);
+    async function getitems() {
+      if (router.query.userid === undefined) return;
+      if (user === null) return;
+      const { data } = await supabaseClient
+        .from("items")
+        .select("*")
+        .in("user_id", [user.id, router.query.userid]);
+      if (data !== null) setAllItems(data);
+      console.log(data);
+    }
+    getitems().catch((err) => console.error(err));
+  }, [router.query.userid, supabaseClient, user]);
   return (
     <div className="mx-auto grid w-[90%] lg:grid-cols-2">
       <div className="mx-5 bg-base-200 ">
@@ -67,11 +84,13 @@ const offermaker = () => {
         <div>
           {allItems?.map((item) => {
             return (
-              <div className="m-2 flex gap-5 shadow-xl">
+              <div className="m-2 flex gap-5 shadow-xl" key={item.id}>
                 <Image
                   width={120}
                   height={120}
-                  src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${item.img_name}`}
+                  src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${
+                    item.img_name ? item.img_name : ""
+                  }`}
                   alt="Shoes"
                   className="hover:cursor-pointer"
                   onClick={() => handleAllItemsClick(item)}
@@ -93,11 +112,13 @@ const offermaker = () => {
           <h2>Cserélni kívánt tárgyaid</h2>
           {myItems?.map((item) => {
             return (
-              <div className="m-2 flex gap-5 shadow-xl">
+              <div className="m-2 flex gap-5 shadow-xl" key={item.id}>
                 <Image
                   width={120}
                   height={120}
-                  src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${item.img_name}`}
+                  src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${
+                    item.img_name ? item.img_name : ""
+                  }`}
                   alt="Shoes"
                   className="hover:cursor-pointer"
                   onClick={() => handlePutBackClick(item)}
@@ -111,11 +132,13 @@ const offermaker = () => {
           <h2>Másik fél tárgyai</h2>
           {theirItems?.map((item) => {
             return (
-              <div className="m-2 flex gap-5 shadow-xl">
+              <div className="m-2 flex gap-5 shadow-xl" key={item.id}>
                 <Image
                   width={120}
                   height={120}
-                  src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${item.img_name}`}
+                  src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${
+                    item.img_name ? item.img_name : ""
+                  }`}
                   alt="Shoes"
                   className="hover:cursor-pointer"
                   onClick={() => handlePutBackClick(item)}
@@ -135,4 +158,4 @@ const offermaker = () => {
   );
 };
 
-export default offermaker;
+export default Offermaker;

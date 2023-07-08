@@ -1,7 +1,7 @@
 // pages/api/protected-route.ts
-import { NextApiHandler } from "next";
+import type { NextApiHandler } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "lib/database.types";
+import type { Database } from "lib/database.types";
 
 const callback: NextApiHandler = async (req, res) => {
   // Create authenticated Supabase Client

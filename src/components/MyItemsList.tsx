@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Database } from "lib/database.types";
+import type { Database } from "lib/database.types";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import MyItemCard from "./MyItemCard";
 
-export default function Myitemslist() {
+export default function MyItemsList() {
   const [data, setData] = useState<
     Database["public"]["Tables"]["items"]["Row"][] | null
   >();
@@ -13,16 +13,17 @@ export default function Myitemslist() {
   useEffect(() => {
     const id = user?.id;
     if (!id) return;
-    supabaseClient
-      .from("items")
-      .select("*")
-      .eq("user_id", id)
-      .then((dat) => {
-        if (dat.data && dat.data !== null) {
-          setData(dat.data);
-          console.log(dat.data);
-        }
-      });
+    async function getdata() {
+      const { data } = await supabaseClient
+        .from("items")
+        .select("*")
+        .eq("user_id", id);
+      if (data && data !== null) {
+        setData(data);
+        console.log(data);
+      }
+    }
+    getdata().catch((err) => console.log(err));
   }, []);
 
   if (!data || data.length === 0) return <div>Nincsenek tárgyaid</div>;

@@ -1,6 +1,6 @@
-import { NextApiHandler } from "next";
+import type { NextApiHandler } from "next";
 import { createPagesServerClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "lib/database.types";
+import type { Database } from "lib/database.types";
 
 const handler: NextApiHandler = async (req, res) => {
   const { code } = req.query;

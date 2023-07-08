@@ -1,6 +1,6 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
-import { Database } from "lib/database.types";
+import type { Database } from "lib/database.types";
 
 const LoginPage = () => {
   const user = useUser();
@@ -14,15 +14,18 @@ const LoginPage = () => {
       console.log(data);
     }
     // Only run query once user is logged in.
-    if (user) loadData();
-  }, [user]);
-  const handleLogin = async () => {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-    if (error) console.log(error);
-    console.log(data);
+    if (user) loadData().catch((err) => console.error(err));
+  }, [user, supabaseClient]);
+  const handleLogin = () => {
+    const loginas = async () => {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+      if (error) console.log(error);
+      console.log(data);
+    };
+    loginas().catch((err) => console.error(err));
   };
   if (!user)
     return (

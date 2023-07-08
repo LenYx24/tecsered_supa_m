@@ -34,6 +34,12 @@ export interface Database {
             columns: ["item_id"]
             referencedRelation: "items"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "images_item_id_fkey"
+            columns: ["item_id"]
+            referencedRelation: "itemswithfirstname"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -132,6 +138,12 @@ export interface Database {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "transaction_item_item_id_fkey"
+            columns: ["item_id"]
+            referencedRelation: "itemswithfirstname"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "transaction_item_trans_id_fkey"
             columns: ["trans_id"]
             referencedRelation: "transactions"
@@ -178,7 +190,26 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      itemswithfirstname: {
+        Row: {
+          created_at: string | null
+          desc: string | null
+          first_name: string | null
+          id: number | null
+          img_name: string | null
+          title: string | null
+          user_id: string | null
+          value: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "items_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Functions: {
       [_ in never]: never

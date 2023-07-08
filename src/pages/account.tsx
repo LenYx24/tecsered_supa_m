@@ -1,8 +1,8 @@
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import React from "react";
 
-const account = () => {
+const Account = () => {
   const user = useUser();
   if (!user)
     return (
@@ -18,4 +18,4 @@ const account = () => {
   );
 };
 
-export default account;
+export default Account;

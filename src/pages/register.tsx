@@ -1,27 +1,30 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Database } from "lib/database.types";
+import type { Database } from "lib/database.types";
 import React, { useState } from "react";
 
-const register = () => {
+const Register = () => {
   const [firstname, setFirstname] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const supabaseClient = useSupabaseClient<Database>();
   const user = useUser();
-  const handleRegister = async () => {
-    const { data, error } = await supabaseClient.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          first_name: firstname,
-          avatar_url: "nincs",
+  const handleRegister = () => {
+    async function handle() {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            first_name: firstname,
+            avatar_url: "nincs",
+          },
         },
-      },
-    });
-    if (error) console.log(error);
-    else alert("Sikeres regisztáció!");
-    console.log(data);
+      });
+      if (error) console.log(error);
+      else alert("Sikeres regisztáció!");
+      console.log(data);
+    }
+    handle().catch((err) => console.error(err));
   };
   if (!user)
     return (
@@ -72,4 +75,4 @@ const register = () => {
   );
 };
 
-export default register;
+export default Register;

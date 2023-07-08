@@ -1,23 +1,41 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Database } from "lib/database.types";
+import type { Database } from "lib/database.types";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 const UserIconMenu = () => {
-  const [profilePic, setProfilePic] = useState<string | null>("");
   const supabaseClient = useSupabaseClient<Database>();
-
+  const [avatarurl, setAvatarurl] = useState<string>("");
   const user = useUser();
   const handlelogout = () => {
     if (user) {
-      supabaseClient.auth.signOut();
+      supabaseClient.auth.signOut().catch((err) => console.log(err));
     }
   };
+  useEffect(() => {
+    async function getavatarurl() {
+      const { data } = await supabaseClient
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", user?.id);
+      if (data !== null) {
+        setAvatarurl(data[0]?.avatar_url ? data[0].avatar_url : "");
+      }
+    }
+    getavatarurl().catch((err) => console.log(err));
+  }, []);
   return (
     <div className="dropdown-end dropdown">
-      {profilePic ? (
-        <Image tabIndex={0} src={profilePic} alt="" className="btn m-1" />
+      {avatarurl !== "nincs" ? (
+        <Image
+          tabIndex={0}
+          src={avatarurl}
+          width={20}
+          height={20}
+          alt=""
+          className="btn m-1"
+        />
       ) : (
         <svg
           tabIndex={0}

@@ -5,7 +5,7 @@ import {
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { AppProps } from "next/app";
 import { useState } from "react";
-import Layout from "~/components/layout";
+import Layout from "~/components/Layout";
 import "~/styles/globals.css";
 
 function MyApp({

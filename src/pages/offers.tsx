@@ -1,22 +1,30 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "lib/database.types";
+import type { Database } from "lib/database.types";
 import React, { useEffect, useState } from "react";
 
 const Offers = () => {
-  const [offrs, setOffrs] = useState<any>();
+  const [offrs, setOffrs] =
+    useState<Database["public"]["Tables"]["transactions"]["Row"][]>();
   const supabaseClient = useSupabaseClient<Database>();
-  async function loadOffrs() {
-    const { data, error } = await supabaseClient
-      .from("transactions")
-      .select("*");
-    console.log(data);
-    console.log(error);
-  }
+
   useEffect(() => {
-    loadOffrs();
+    async function loadOffrs() {
+      const { data, error } = await supabaseClient
+        .from("transactions")
+        .select("*");
+      console.log(data);
+      console.log(error);
+    }
+    loadOffrs().catch((err) => console.error(err));
   }, []);
-  return <div>offers</div>;
+  return (
+    <div>
+      <h1>Ajánlatok</h1>
+      {offrs?.map((x) => (
+        <div key={x.id}>{x.initiator}</div>
+      ))}
+    </div>
+  );
 };
 
 export default Offers;

@@ -1,50 +1,56 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Database } from "lib/database.types";
+import type { Database } from "lib/database.types";
 import React, { useState } from "react";
-import Myitemslist from "~/components/Myitemslist";
+import Myitemslist from "~/components/MyItemsList";
 
-function myitems() {
+function Myitems() {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const supabaseClient = useSupabaseClient<Database>();
   const ref = React.useRef<HTMLInputElement>(null);
-  supabaseClient.auth.getSession().then((x) => console.log(x));
-  async function submit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  supabaseClient.auth
+    .getSession()
+    .then((x) => console.log(x))
+    .catch((err) => console.error(err));
+  function submit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     const imgname = `${name}.png`;
-    const uid = (await supabaseClient.auth.getUser()).data.user?.id;
-    if (uid === undefined) {
-      alert("Jelentkezz be öcsi");
-      return;
-    }
-    await supabaseClient.from("items").insert([
-      {
-        title: name,
-        desc: desc,
-        user_id: uid,
-        value: Number(price),
-        img_name: imgname,
-      },
-    ]);
-    if (
-      ref.current === null ||
-      ref.current.files === null ||
-      ref.current.files[0] === undefined
-    ) {
-      alert("Jelöld ki a képet pls");
-      return;
-    }
-    const { data, error } = await supabaseClient.storage
-      .from("items")
-      .upload(imgname, ref.current.files[0], {
-        cacheControl: "3600",
-        upsert: false,
-      });
+    const submitas = async () => {
+      const uid = (await supabaseClient.auth.getUser()).data.user?.id;
+      if (uid === undefined) {
+        alert("Jelentkezz be öcsi");
+        return;
+      }
+      await supabaseClient.from("items").insert([
+        {
+          title: name,
+          desc: desc,
+          user_id: uid,
+          value: Number(price),
+          img_name: imgname,
+        },
+      ]);
+      if (
+        ref.current === null ||
+        ref.current.files === null ||
+        ref.current.files[0] === undefined
+      ) {
+        alert("Jelöld ki a képet pls");
+        return;
+      }
+      const { data, error } = await supabaseClient.storage
+        .from("items")
+        .upload(imgname, ref.current.files[0], {
+          cacheControl: "3600",
+          upsert: false,
+        });
 
-    console.log(data);
-    console.log(error);
+      console.log(data);
+      console.log(error);
+    };
+    submitas().catch((err) => console.log(err));
   }
   return (
     <div>
@@ -99,4 +105,4 @@ function myitems() {
   );
 }
 
-export default myitems;
+export default Myitems;
