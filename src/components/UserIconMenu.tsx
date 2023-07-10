@@ -2,11 +2,12 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import type { Database } from "lib/database.types";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const UserIconMenu = () => {
   const supabaseClient = useSupabaseClient<Database>();
-  const [avatarurl, setAvatarurl] = useState<string>("");
+  const [avatarurl, setAvatarurl] = useState<string>("nincs");
   const user = useUser();
   const handlelogout = () => {
     if (user) {
@@ -15,18 +16,22 @@ const UserIconMenu = () => {
   };
   useEffect(() => {
     async function getavatarurl() {
-      const { data } = await supabaseClient
+      const usr = await user;
+      if (!usr) return;
+      const { data, error } = await supabaseClient
         .from("profiles")
         .select("avatar_url")
-        .eq("id", user?.id);
+        .eq("id", usr.id);
       if (data !== null) {
-        setAvatarurl(data[0]?.avatar_url ? data[0].avatar_url : "");
+        setAvatarurl(data[0]?.avatar_url ? data[0].avatar_url : "nincs");
       }
+      console.log(error);
     }
-    getavatarurl().catch((err) => console.log(err));
+    getavatarurl().catch((err) => console.error(err));
   }, []);
+  const router = useRouter();
   return (
-    <div className="dropdown-end dropdown">
+    <div className="dropdown-end dropdown" data-theme="cupcake">
       {avatarurl !== "nincs" ? (
         <Image
           tabIndex={0}
@@ -44,7 +49,9 @@ const UserIconMenu = () => {
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="h-8 w-8 cursor-pointer hover:text-slate-200"
+          className={`h-8 w-8 cursor-pointer ${
+            router.pathname === "/" ? "bg-main" : "bg-slate-50"
+          } hover:text-maindark`}
         >
           <path
             strokeLinecap="round"
@@ -58,11 +65,16 @@ const UserIconMenu = () => {
         <li>
           <Link href="/account">Fiók</Link>
         </li>
-        <li>
-          <button className="btn-error btn" onClick={handlelogout}>
-            Kijelentkezés
-          </button>
-        </li>
+        {user && (
+          <li>
+            <button
+              className="btn bg-unique text-white hover:bg-uniquedark"
+              onClick={handlelogout}
+            >
+              Kijelentkezés
+            </button>
+          </li>
+        )}
       </ul>
     </div>
   );

@@ -6,7 +6,9 @@ export default function Layout({ children }: { children: React.ReactElement }) {
   return (
     <>
       <Navbar />
-      <div className="min-h-[80vh]">{children}</div>
+      <div className="min-h-[80vh]" data-theme="cupcake">
+        {children}
+      </div>
       <Footer />
     </>
   );

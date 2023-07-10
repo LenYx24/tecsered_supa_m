@@ -1,5 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
+import herosvg from "../../public/hero.svg";
 
 const Home: NextPage = () => {
   return (
@@ -9,20 +11,39 @@ const Home: NextPage = () => {
         <meta name="description" content="Egy online csere platform" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-[url('../../public/bg.jpg')] bg-cover bg-no-repeat text-white">
+      <main className="bg-hero-pattern flex min-h-[95vh] cursor-default flex-col items-center justify-center bg-main font-bold text-unique lg:flex-row">
         <div className="hero-content text-center">
-          <div className="rounded-3xl bg-gradient-to-b from-slate-800 to-transparent p-8">
-            <h1 className="text-[7rem]">TeCseréd</h1>
-            <p className="py-6">
-              Üdvözöllek halandó! Ha netán fennmaradt pár tárgyad amit el
-              szeretnél cserélni, akkor itt a helyed!
+          <div>
+            <h1 className="text-[4rem] transition-all hover:scale-110 hover:drop-shadow-2xl md:text-[5rem] lg:text-[7rem]">
+              TeCseréd
+            </h1>
+            <p className="py-6 text-slate-600">
+              Vannak{" "}
+              <span className="decoration underline decoration-maindark decoration-wavy">
+                nem használt
+              </span>{" "}
+              tárgyaid amikre már semmi szükséged?
+              <br /> Cseréld el ezeket valami másra, ami talán{" "}
+              <span className="underline decoration-unique decoration-4">
+                hasznos
+              </span>{" "}
+              lesz neked!
             </p>
-            <button className="btn-outline btn bg-blue-300 text-black">
+            <button className="hover: bg-unique px-5 py-3 text-white transition-all hover:scale-110">
               Cserére fel!
             </button>
           </div>
         </div>
+        <div>
+          <Image
+            width={580}
+            src={herosvg}
+            alt="zöld figurák társalognak"
+            priority
+          />
+        </div>
       </main>
+      <section className="flex flex-col items-center justify-center bg-main font-bold text-unique lg:flex-row"></section>
     </>
   );
 };

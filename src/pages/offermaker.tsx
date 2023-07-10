@@ -51,11 +51,36 @@ const Offermaker = () => {
       if (typeof initiator_id !== "string" || initiator_id === undefined)
         return;
       if (typeof receiver_id !== "string" || receiver_id === undefined) return;
-      const req = await supabaseClient
+      const { data, error } = await supabaseClient
         .from("transactions")
         .insert([
           { initiator: initiator_id, receiver: receiver_id, status: "request" },
-        ]);
+        ])
+        .select("id");
+      if (error) {
+        console.log(error);
+        return;
+      }
+      if (data[0] === undefined) return;
+      const id: number = data[0].id;
+      type objtype = {
+        trans_id: number;
+        item_id: number;
+      }[];
+      let obj: objtype = myItems.map((i) => ({
+        item_id: i.id,
+        trans_id: id,
+      }));
+      let obj2: objtype = theirItems.map((i) => ({
+        item_id: i.id,
+        trans_id: id,
+      }));
+      console.log(obj.concat(obj2));
+      const req = await supabaseClient
+        .from("transaction_item")
+        .insert(obj.concat(obj2));
+      console.log(req.data);
+      console.error(req.error);
     }
     handle().catch((err) => console.error(err));
   }
