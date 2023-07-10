@@ -37,7 +37,7 @@ const Home: NextPage = () => {
         <div>
           <Image
             width={580}
-            src={herosvg}
+            src={herosvg as string}
             alt="zöld figurák társalognak"
             priority
           />

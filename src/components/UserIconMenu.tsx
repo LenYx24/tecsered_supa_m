@@ -16,12 +16,11 @@ const UserIconMenu = () => {
   };
   useEffect(() => {
     async function getavatarurl() {
-      const usr = await user;
-      if (!usr) return;
+      if (!user) return;
       const { data, error } = await supabaseClient
         .from("profiles")
         .select("avatar_url")
-        .eq("id", usr.id);
+        .eq("id", user.id);
       if (data !== null) {
         setAvatarurl(data[0]?.avatar_url ? data[0].avatar_url : "nincs");
       }

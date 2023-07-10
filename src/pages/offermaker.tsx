@@ -67,11 +67,11 @@ const Offermaker = () => {
         trans_id: number;
         item_id: number;
       }[];
-      let obj: objtype = myItems.map((i) => ({
+      const obj: objtype = myItems.map((i) => ({
         item_id: i.id,
         trans_id: id,
       }));
-      let obj2: objtype = theirItems.map((i) => ({
+      const obj2: objtype = theirItems.map((i) => ({
         item_id: i.id,
         trans_id: id,
       }));

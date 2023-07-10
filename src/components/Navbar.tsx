@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <div
       className={`navbar h-[5vh] text-slate-800 md:px-32 ${bgcolor} ${
-        router.pathname !== "/" && "border-b"
+        router.pathname !== "/" ? "border-b" : ""
       } border-slate-200`}
     >
       <div className="navbar-start">
