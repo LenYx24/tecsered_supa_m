@@ -4,8 +4,6 @@ import useItems from "~/hooks/useItems";
 
 export default function Items() {
   const { itemsarr, loading } = useItems();
-  if (itemsarr === undefined || itemsarr?.length === 0 || loading)
-    return <div>Nincsenek tárgyak</div>;
   return (
     <div className="mx-auto px-4 pt-5 md:w-[80%]">
       <h1 className="border-b border-t text-center text-[2rem] ">Tárgyak</h1>
@@ -90,13 +88,18 @@ export default function Items() {
           </select>
         </div>
       </div>
-
-      <div className="">
-        <div className="grid lg:grid-cols-2 2xl:grid-cols-3">
-          {itemsarr?.map((item) => {
-            return <Card item={item} key={item.id} />;
-          })}
-        </div>
+      <div>
+        {itemsarr === undefined || itemsarr?.length === 0 || loading ? (
+          <span className="loading-spinner loading-md loading mx-auto">
+            Nincsenek tárgyak
+          </span>
+        ) : (
+          <div className="grid lg:grid-cols-2 2xl:grid-cols-3">
+            {itemsarr?.map((item) => {
+              return <Card item={item} key={item.id} />;
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

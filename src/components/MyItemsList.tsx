@@ -26,12 +26,17 @@ export default function MyItemsList() {
     getdata().catch((err) => console.log(err));
   }, []);
 
-  if (!data || data.length === 0) return <div>Nincsenek tárgyaid</div>;
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3">
-      {data.map((i) => (
-        <MyItemCard item={i} key={i.id} />
-      ))}
+    <div className="mx-5 grid md:mx-auto md:w-[80vw] md:grid-cols-2 lg:grid-cols-3">
+      {!data || data.length === 0 ? (
+        <div>Nincsenek tárgyaid</div>
+      ) : (
+        <div>
+          {data.map((i) => (
+            <MyItemCard item={i} key={i.id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

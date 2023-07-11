@@ -1,6 +1,8 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import type { Database } from "lib/database.types";
+import loginsvg from "../../public/Authentication-bro.svg";
+import Image from "next/image";
 
 const LoginPage = () => {
   const user = useUser();
@@ -27,42 +29,46 @@ const LoginPage = () => {
     };
     loginas().catch((err) => console.error(err));
   };
-  if (!user)
-    return (
-      <div className="mx-auto w-[40vw] justify-center gap-4 p-5">
-        <div className="form-control">
-          <label className="input-group py-2">
-            <span>Email</span>
-            <input
-              type="email"
-              placeholder="Email cím"
-              className="input-bordered input-primary input w-full max-w-xs"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
-          <label className="input-group py-2">
-            <span>Jelszó</span>
-            <input
-              type="password"
-              placeholder="Jelszó"
-              className="input-bordered input-primary input w-full max-w-xs"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
-        </div>
-        <button onClick={handleLogin} className="btn-primary btn">
+
+  return (
+    <div className="mx-auto items-center justify-center gap-4 p-5 md:flex md:w-[80vw]">
+      <div className="form-control mx-auto md:w-[70%] lg:mx-0 lg:w-auto">
+        <label className="input-group py-2">
+          <span>Email</span>
+          <input
+            type="email"
+            placeholder="Email cím"
+            className="input-bordered input-primary input w-full"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+        <label className="input-group py-2">
+          <span>Jelszó</span>
+          <input
+            type="password"
+            placeholder="Jelszó"
+            className="input-bordered input-primary input w-full"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <button
+          onClick={handleLogin}
+          className="btn-outline btn w-full border-none bg-unique text-white hover:bg-unique hover:opacity-80"
+        >
           Bejelentkezés
         </button>
       </div>
-    );
 
-  return (
-    <>
-      <p>user:</p>
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-    </>
+      <Image
+        className="mx-auto md:mx-0"
+        width={300}
+        height={300}
+        alt="login animáció"
+        src={loginsvg as string}
+      />
+    </div>
   );
 };
 

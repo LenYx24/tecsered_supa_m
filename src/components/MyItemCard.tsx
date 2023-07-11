@@ -7,7 +7,7 @@ const MyItemCard = (props: {
 }) => {
   const { title, desc, img_name } = props.item;
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="card w-full rounded-none bg-base-100 shadow-xl md:w-96">
       <figure>
         <Image
           width={200}
@@ -22,7 +22,7 @@ const MyItemCard = (props: {
         <h2 className="card-title">{title}</h2>
         <p>{desc}</p>
         <div className="card-actions justify-end">
-          <button className="btn-primary btn">
+          <button className="btn bg-maindark text-white">
             Csere kérések megtekintése
           </button>
         </div>

@@ -54,8 +54,7 @@ function Myitems() {
   }
   return (
     <div>
-      <h1>Feltölt</h1>
-      <div className="mx-auto flex w-[40vw] justify-center">
+      <div className="mx-auto mb-4 flex justify-center md:w-[40vw]">
         <div className="form-control">
           <label className="input-group py-2">
             <span>Név</span>
@@ -70,8 +69,7 @@ function Myitems() {
           <label className="input-group py-2">
             <span>Leírás</span>
             <textarea
-              placeholder="Leírás"
-              className="input-bordered input-primary input w-full max-w-xs"
+              className="input-bordered input-primary input h-24 w-full max-w-xs"
               value={desc}
               onChange={(e) => setDesc(e.target.value)}
             ></textarea>
@@ -96,10 +94,14 @@ function Myitems() {
               onChange={(e) => setImage(e.target.value)}
             />
           </label>
-          <button onClick={(e) => submit(e)}>Feltölt</button>
+          <button
+            onClick={(e) => submit(e)}
+            className="btn bg-unique text-white hover:bg-uniquedark "
+          >
+            Feltölt
+          </button>
         </div>
       </div>
-      <h2>Tárgyaim</h2>
       <Myitemslist />
     </div>
   );

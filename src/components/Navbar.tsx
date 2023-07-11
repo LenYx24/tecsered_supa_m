@@ -2,15 +2,23 @@ import Link from "next/link";
 import React from "react";
 import UserIconMenu from "./UserIconMenu";
 import { useRouter } from "next/router";
+import { useUser } from "@supabase/auth-helpers-react";
 
 const Navbar = () => {
-  const navitems = [
-    { href: "/", title: "Főoldal" },
+  const user = useUser();
+  let navitems = [
     { href: "/items", title: "Tárgyak" },
     { href: "/myitems", title: "Tárgyaim" },
     { href: "/offers", title: "Ajánlatok" },
     { href: "/messages", title: "Üzenetek" },
   ];
+  if (!user) {
+    navitems = [
+      { href: "/items", title: "Tárgyak" },
+      { href: "/register", title: "Regisztráció" },
+      { href: "/login", title: "Bejelentkezés" },
+    ];
+  }
   const router = useRouter();
   const bgcolor = router.pathname === "/" ? "bg-main" : "bg-white";
   return (

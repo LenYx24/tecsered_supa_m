@@ -67,7 +67,7 @@ const UserIconMenu = () => {
         {user && (
           <li>
             <button
-              className="btn bg-unique text-white hover:bg-uniquedark"
+              className="bg-unique text-white hover:bg-unique hover:text-white hover:opacity-80"
               onClick={handlelogout}
             >
               Kijelentkezés
