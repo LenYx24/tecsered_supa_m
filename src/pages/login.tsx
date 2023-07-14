@@ -3,13 +3,22 @@ import { useEffect, useState } from "react";
 import type { Database } from "lib/database.types";
 import loginsvg from "../../public/Authentication-bro.svg";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import useCheckCredentials from "~/hooks/useCheckCredentials";
 
 const LoginPage = () => {
   const user = useUser();
   const [password, setPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const supabaseClient = useSupabaseClient<Database>();
-
+  const {
+    errortext,
+    setErrortext,
+    checkUniqueEmail,
+    checkEmail,
+    checkPassword,
+  } = useCheckCredentials();
+  const router = useRouter();
   useEffect(() => {
     async function loadData() {
       const { data } = await supabaseClient.from("items").select("*");
@@ -20,14 +29,23 @@ const LoginPage = () => {
   }, [user, supabaseClient]);
   const handleLogin = () => {
     const loginas = async () => {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
+      const { error } = await supabaseClient.auth.signInWithPassword({
         email: email,
         password: password,
       });
-      if (error) console.log(error);
-      console.log(data);
+      if (error) {
+        if (error.message === "Invalid login credentials") {
+          setErrortext("Rossz bejelentkezési adatokat adtál meg!");
+        } else {
+          setErrortext(error.message);
+        }
+      } else {
+        router.push("/").catch((x) => console.log(x));
+      }
     };
-    loginas().catch((err) => console.error(err));
+    if (checkEmail(email) && password.length !== 0) {
+      loginas().catch((err) => setErrortext(err as string));
+    }
   };
 
   return (
@@ -40,7 +58,9 @@ const LoginPage = () => {
             placeholder="Email cím"
             className="input-bordered input-primary input w-full"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
         </label>
         <label className="input-group py-2">
@@ -59,6 +79,7 @@ const LoginPage = () => {
         >
           Bejelentkezés
         </button>
+        <p className="italic">{errortext}</p>
       </div>
 
       <Image

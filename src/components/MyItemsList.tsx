@@ -5,7 +5,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import MyItemCard from "./MyItemCard";
 
 export default function MyItemsList() {
-  const [data, setData] = useState<
+  const [items, setItems] = useState<
     Database["public"]["Tables"]["items"]["Row"][] | null
   >();
   const supabaseClient = useSupabaseClient<Database>();
@@ -19,7 +19,7 @@ export default function MyItemsList() {
         .select("*")
         .eq("user_id", id);
       if (data && data !== null) {
-        setData(data);
+        setItems(data);
         console.log(data);
       }
     }
@@ -27,12 +27,12 @@ export default function MyItemsList() {
   }, []);
 
   return (
-    <div className="mx-5 grid md:mx-auto md:w-[80vw] md:grid-cols-2 lg:grid-cols-3">
-      {!data || data.length === 0 ? (
+    <div className="mx-5 grid py-4 md:mx-auto md:w-[80vw] md:grid-cols-2 lg:grid-cols-3">
+      {!items || items.length === 0 ? (
         <div>Nincsenek tárgyaid</div>
       ) : (
         <div>
-          {data.map((i) => (
+          {items.map((i) => (
             <MyItemCard item={i} key={i.id} />
           ))}
         </div>

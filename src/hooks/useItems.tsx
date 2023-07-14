@@ -6,14 +6,14 @@ const useItems = () => {
   const supabaseClient = useSupabaseClient<Database>();
   const [loading, setLoading] = useState<boolean>(true);
   const [itemsarr, setItemsarr] =
-    useState<Database["public"]["Views"]["itemswithfirstname"]["Row"][]>();
+    useState<Database["public"]["Views"]["itemswithusername"]["Row"][]>();
   const user = useUser();
 
   useEffect(() => {
     async function getdata() {
       console.log(user);
       const { data: newdat } = await supabaseClient
-        .from("itemswithfirstname")
+        .from("itemswithusername")
         .select("*");
       if (newdat === null) return;
       setItemsarr(newdat);

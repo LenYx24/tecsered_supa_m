@@ -9,7 +9,6 @@ const Home: NextPage = () => {
       <Head>
         <title>Tecseréd</title>
         <meta name="description" content="Egy online csere platform" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="bg-hero-pattern flex min-h-[95vh] cursor-default flex-col items-center justify-center bg-main font-bold text-unique lg:flex-row">
         <div className="hero-content text-center">

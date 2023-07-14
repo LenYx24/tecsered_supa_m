@@ -16,7 +16,7 @@ const Account = () => {
         </h2>
         <h2>
           Vagy ha nincs még fiókod, akkor{" "}
-          <Link className="text-maindark hover:underline" href="/login">
+          <Link className="text-maindark hover:underline" href="/register">
             regiszrálj
           </Link>
         </h2>
@@ -46,9 +46,9 @@ const Account = () => {
                 <g
                   id="Page-1"
                   stroke="none"
-                  stroke-width="1"
+                  strokeWidth="1"
                   fill="none"
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                 >
                   <g
                     id="Dribbble-Light-Preview"
@@ -76,8 +76,8 @@ const Account = () => {
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
+              fillRule="evenodd"
+              clipRule="evenodd"
               d="M3.75 5.25L3 6V18L3.75 18.75H20.25L21 18V6L20.25 5.25H3.75ZM4.5 7.6955V17.25H19.5V7.69525L11.9999 14.5136L4.5 7.6955ZM18.3099 6.75H5.68986L11.9999 12.4864L18.3099 6.75Z"
               fill="#3C5F1B"
             />
@@ -85,8 +85,7 @@ const Account = () => {
         </div>
 
         <div className=" text-maindark">{user.email}</div>
-        <div className="">@{user.user_metadata.first_name}</div>
-        <div className="">31 tasks remaining</div>
+        <div className="">@{user.user_metadata.username}</div>
       </div>
     </div>
   );

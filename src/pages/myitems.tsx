@@ -1,5 +1,6 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import type { Database } from "lib/database.types";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Myitemslist from "~/components/MyItemsList";
 
@@ -10,26 +11,26 @@ function Myitems() {
   const [image, setImage] = useState("");
   const supabaseClient = useSupabaseClient<Database>();
   const ref = React.useRef<HTMLInputElement>(null);
-  supabaseClient.auth
-    .getSession()
-    .then((x) => console.log(x))
-    .catch((err) => console.error(err));
+  const router = useRouter();
   function submit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-    const imgname = `${name}.png`;
     const submitas = async () => {
       const uid = (await supabaseClient.auth.getUser()).data.user?.id;
       if (uid === undefined) {
-        alert("Jelentkezz be öcsi");
+        alert("Jelentkezzen be");
         return;
       }
+      if (!ref || !ref.current || !ref.current.files || !ref.current.files[0]) {
+        return;
+      }
+      console.log(ref.current.files[0].name);
       await supabaseClient.from("items").insert([
         {
           title: name,
           desc: desc,
           user_id: uid,
           value: Number(price),
-          img_name: imgname,
+          img_name: ref.current.files[0]?.name,
         },
       ]);
       if (
@@ -37,18 +38,19 @@ function Myitems() {
         ref.current.files === null ||
         ref.current.files[0] === undefined
       ) {
-        alert("Jelöld ki a képet pls");
+        alert("Jelöld ki a képet");
         return;
       }
       const { data, error } = await supabaseClient.storage
         .from("items")
-        .upload(imgname, ref.current.files[0], {
+        .upload(ref.current.files[0].name, ref.current.files[0], {
           cacheControl: "3600",
           upsert: false,
         });
 
-      console.log(data);
-      console.log(error);
+      if (!error) {
+        router.reload();
+      }
     };
     submitas().catch((err) => console.log(err));
   }

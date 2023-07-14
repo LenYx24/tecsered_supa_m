@@ -6,9 +6,9 @@ import type { Database } from "lib/database.types";
 const Card = ({
   item,
 }: {
-  item: Database["public"]["Views"]["itemswithfirstname"]["Row"];
+  item: Database["public"]["Views"]["itemswithusername"]["Row"];
 }) => {
-  const { title, desc, img_name, first_name } = item;
+  const { title, desc, img_name, username } = item;
 
   const href = "/offermaker";
   const router = useRouter();
@@ -22,7 +22,7 @@ const Card = ({
       .catch((err) => console.log(err));
   };
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="card my-4 w-96 bg-base-100 shadow-xl">
       <figure>
         <Image
           width={200}
@@ -35,7 +35,7 @@ const Card = ({
       </figure>
       <div className="card-body relative">
         <h2 className="card-title">{title}</h2>
-        <p className="text-right italic">{first_name}</p>
+        <p className="text-right italic">{username}</p>
         <p>{desc}</p>
         <div className="card-actions justify-end">
           <a href={href} className="btn-primary btn" onClick={handleClick}>

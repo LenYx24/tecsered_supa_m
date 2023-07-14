@@ -34,7 +34,7 @@ const Offers = () => {
     <div className="mx-auto w-[80%]">
       <h2>Elküldött Ajánlatok</h2>
       <div className="mx-auto">
-        <table className="table overflow-scroll">
+        <table className="table">
           <thead>
             <tr>
               <th>

@@ -22,7 +22,7 @@ const UserIconMenu = () => {
         .select("avatar_url")
         .eq("id", user.id);
       if (data !== null) {
-        setAvatarurl(data[0]?.avatar_url ? data[0].avatar_url : "nincs");
+        setAvatarurl(data[0]?.avatar_url ? data[0].avatar_url : "");
       }
       console.log(error);
     }
