@@ -1,31 +1,37 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import Image from "next/image";
 import type { Database } from "lib/database.types";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useRouter } from "next/router";
 
 const MyItemCard = (props: {
   item: Database["public"]["Tables"]["items"]["Row"];
+  setItemsarr: Dispatch<
+    SetStateAction<Database["public"]["Tables"]["items"]["Row"][] | undefined>
+  >;
 }) => {
   const { title, desc, img_name, id } = props.item;
   const supabase = useSupabaseClient();
-  const router = useRouter();
   function handleDelete() {
     const handle = async () => {
       const { data, error } = await supabase
         .from("items")
         .delete()
         .eq("id", id);
-      console.log(id);
-      console.log(data);
-      console.log(error);
+      const deleteimg = await supabase.storage
+        .from("items")
+        .remove([`${img_name}`]);
+      console.log(deleteimg.data);
+      console.log(deleteimg.error);
+      console.log(img_name);
+      if (error) console.log(error);
+      else {
+        props.setItemsarr((prevstate) => prevstate?.filter((x) => x.id !== id));
+      }
     };
-    handle()
-      .then((x) => router.reload())
-      .catch((err) => console.log(err));
+    handle().catch((err) => console.log(err));
   }
   return (
-    <div className="card w-full rounded-none bg-base-100 shadow-xl md:w-96">
+    <div className="card my-2 w-full rounded-none bg-base-100 shadow-xl md:w-96">
       <figure>
         <Image
           width={200}

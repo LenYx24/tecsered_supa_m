@@ -1,8 +1,8 @@
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import type { Database } from "lib/database.types";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Myitemslist from "~/components/MyItemsList";
+import useMyItems from "~/hooks/useMyItems";
 
 function Myitems() {
   const [name, setName] = useState("");
@@ -11,7 +11,8 @@ function Myitems() {
   const [image, setImage] = useState("");
   const supabaseClient = useSupabaseClient<Database>();
   const ref = React.useRef<HTMLInputElement>(null);
-  const router = useRouter();
+  const { itemsarr, setItemsarr, loading } = useMyItems();
+  const user = useUser();
   function submit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     const submitas = async () => {
@@ -24,15 +25,14 @@ function Myitems() {
         return;
       }
       console.log(ref.current.files[0].name);
-      await supabaseClient.from("items").insert([
-        {
-          title: name,
-          desc: desc,
-          user_id: uid,
-          value: Number(price),
-          img_name: ref.current.files[0]?.name,
-        },
-      ]);
+      const newitem = {
+        title: name,
+        desc: desc,
+        user_id: uid,
+        value: Number(price),
+        img_name: ref.current.files[0]?.name,
+      };
+      await supabaseClient.from("items").insert([newitem]);
       if (
         ref.current === null ||
         ref.current.files === null ||
@@ -41,15 +41,22 @@ function Myitems() {
         alert("Jelöld ki a képet");
         return;
       }
-      const { data, error } = await supabaseClient.storage
+      const { error } = await supabaseClient.storage
         .from("items")
         .upload(ref.current.files[0].name, ref.current.files[0], {
           cacheControl: "3600",
           upsert: false,
         });
-
       if (!error) {
-        router.reload();
+        const id = user?.id;
+
+        const { data: newdat } = await supabaseClient
+          .from("items")
+          .select("*")
+          .eq("user_id", id);
+        if (newdat === null) return;
+        setItemsarr(newdat);
+        console.log(newdat);
       }
     };
     submitas().catch((err) => console.log(err));
@@ -104,7 +111,11 @@ function Myitems() {
           </button>
         </div>
       </div>
-      <Myitemslist />
+      <Myitemslist
+        itemsarr={itemsarr}
+        setItemsarr={setItemsarr}
+        loading={loading}
+      />
     </div>
   );
 }
