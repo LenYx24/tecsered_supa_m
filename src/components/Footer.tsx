@@ -7,20 +7,20 @@ const Footer = () => {
       data-theme="cupcake"
     >
       <div>
-        <span className="footer-title">Rólunk</span>
+        <span className="footer-title opacity-100">Rólunk</span>
         <hr />
         <a className="link-hover link">Bemutatkozás</a>
         <a className="link-hover link">Elérhetőség</a>
       </div>
       <div>
-        <span className="footer-title">Segítség</span>
+        <span className="footer-title opacity-100">Segítség</span>
         <hr />
         <a className="link-hover link">Hírlevél</a>
         <a className="link-hover link">Visszajelzés</a>
         <a className="link-hover link">Jelentés</a>
       </div>
       <div>
-        <span className="footer-title">Legalitás</span>
+        <span className="footer-title opacity-100">Legalitás</span>
         <hr />
 
         <a className="link-hover link">Adatkezelési tájékoztató</a>

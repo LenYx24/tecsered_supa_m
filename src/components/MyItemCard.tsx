@@ -19,7 +19,7 @@ const MyItemCard = (props: {
         .eq("id", id);
       const deleteimg = await supabase.storage
         .from("items")
-        .remove([`${img_name}`]);
+        .remove([`${img_name ? img_name : ""}`]);
       console.log(deleteimg.data);
       console.log(deleteimg.error);
       console.log(img_name);

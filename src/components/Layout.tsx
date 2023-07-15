@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactElement }) {
   return (
     <>
       <Navbar />
-      <div className="min-h-[80vh]" data-theme="cupcake">
+      <div className="min-h-[80vh] bg-slate-100" data-theme="cupcake">
         {children}
       </div>
       <Footer />

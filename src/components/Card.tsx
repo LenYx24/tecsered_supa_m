@@ -2,13 +2,14 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import type { Database } from "lib/database.types";
+import Link from "next/link";
 
 const Card = ({
   item,
 }: {
   item: Database["public"]["Views"]["itemswithusername"]["Row"];
 }) => {
-  const { title, desc, img_name, username } = item;
+  const { id, title, img_name, username, user_id } = item;
 
   const href = "/offermaker";
   const router = useRouter();
@@ -17,13 +18,13 @@ const Card = ({
     router
       .push({
         pathname: href,
-        query: { itemid: item.id, userid: item.user_id },
+        query: { itemid: id, userid: user_id },
       })
       .catch((err) => console.log(err));
   };
   return (
-    <div className="card my-4 w-96 bg-base-100 shadow-xl">
-      <figure>
+    <div className="my-4 border-2 border-main shadow-xl md:w-96">
+      <figure className="mt-2 flex justify-center border-b-2 border-main">
         <Image
           width={200}
           height={200}
@@ -33,14 +34,24 @@ const Card = ({
           alt="kép"
         />
       </figure>
-      <div className="card-body relative">
-        <h2 className="card-title">{title}</h2>
+      <div className="m-2">
+        <h2 className="font-bold">
+          <Link
+            href={`item/${id ? id : "0"}`}
+            className="cursor-pointer underline"
+          >
+            {title}
+          </Link>
+        </h2>
         <p className="text-right italic">{username}</p>
-        <p>{desc}</p>
         <div className="card-actions justify-end">
-          <a href={href} className="btn-primary btn" onClick={handleClick}>
+          <Link
+            href={href}
+            className="btn border-none bg-unique text-white hover:bg-unique hover:opacity-80"
+            onClick={handleClick}
+          >
             Ajánlat
-          </a>
+          </Link>
         </div>
       </div>
     </div>

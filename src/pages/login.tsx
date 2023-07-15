@@ -5,6 +5,7 @@ import loginsvg from "../../public/Authentication-bro.svg";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useCheckCredentials from "~/hooks/useCheckCredentials";
+import Link from "next/link";
 
 const LoginPage = () => {
   const user = useUser();
@@ -40,7 +41,7 @@ const LoginPage = () => {
           setErrortext(error.message);
         }
       } else {
-        router.push("/").catch((x) => console.log(x));
+        router.push("/account").catch((x) => console.log(x));
       }
     };
     if (checkEmail(email) && password.length !== 0) {
@@ -79,7 +80,38 @@ const LoginPage = () => {
         >
           Bejelentkezés
         </button>
-        <p className="italic">{errortext}</p>
+        {errortext && (
+          <div className="fixed bottom-4 left-0 right-0 m-auto flex rounded bg-unique p-4 md:w-[50%]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 shrink-0 stroke-current"
+              fill="none"
+              viewBox="0 0 24 24"
+              onClick={() => setErrortext("")}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{errortext}</span>
+          </div>
+        )}
+
+        <Link
+          href="/forgotpassword"
+          className="link mx-4 my-2 text-xs italic underline"
+        >
+          Elfelejtettem a jelszavam
+        </Link>
+        <p className=" mx-4 my-2 text-xs">
+          Még nincs felhasználód?{" "}
+          <Link className="link" href="/register">
+            Regisztrálj!
+          </Link>
+        </p>
       </div>
 
       <Image

@@ -24,6 +24,18 @@ const useCheckCredentials = () => {
     }
     return true;
   }
+  function checkUsername(username: string): boolean {
+    if (username.length <= 4) {
+      setErrortext(
+        "Legalább 4 betű hosszúnak kell lennie a felhasználónévnek!"
+      );
+      return false;
+    } else if (username.length > 255) {
+      setErrortext("Túll hosszú a felhasználóneved");
+      return false;
+    }
+    return true;
+  }
   async function checkUniqueUsername(username: string) {
     const { data, error } = await supabaseClient
       .from("profiles")
@@ -63,6 +75,15 @@ const useCheckCredentials = () => {
     }
     return true;
   }
+  function checkTermsandcond(checked: boolean): boolean {
+    if (!checked) {
+      setErrortext(
+        "Ahhoz hogy regisztrálj el kell fogadnod a felhasználási feltételeket!"
+      );
+      return false;
+    }
+    return true;
+  }
   return {
     errortext,
     setErrortext,
@@ -70,6 +91,8 @@ const useCheckCredentials = () => {
     checkPassword,
     checkUniqueUsername,
     checkUniqueEmail,
+    checkUsername,
+    checkTermsandcond,
   };
 };
 
