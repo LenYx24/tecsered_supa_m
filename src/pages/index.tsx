@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import herosvg from "../../public/hero.svg";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   return (
@@ -28,9 +29,12 @@ const Home: NextPage = () => {
               </span>{" "}
               lesz neked!
             </p>
-            <button className="hover: bg-unique px-5 py-3 text-white transition-all hover:scale-110">
+            <Link
+              href="/items"
+              className="hover: bg-unique px-5 py-3 text-white transition-all hover:scale-110"
+            >
               Cserére fel!
-            </button>
+            </Link>
           </div>
         </div>
         <div>
