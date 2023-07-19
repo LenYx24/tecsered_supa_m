@@ -3,10 +3,11 @@ import type { Database } from "lib/database.types";
 import React, { useEffect, useState } from "react";
 
 const Offers = () => {
-  const [offrs, setOffrs] =
+  const [offerslist, setOfferslist] =
     useState<Database["public"]["Tables"]["transactions"]["Row"][]>();
   const [receivedoffrs, setReceivedOffrs] =
     useState<Database["public"]["Tables"]["transactions"]["Row"][]>();
+  const [activetabindex, setActivetabindex] = useState<number>(0);
   const supabaseClient = useSupabaseClient<Database>();
   const user = useSupabaseClient().auth.getUser();
   useEffect(() => {
@@ -18,109 +19,66 @@ const Offers = () => {
       console.log(data);
       console.log(error);
       if (data === null) return;
-      setOffrs(data);
+      setOfferslist(data);
       const { data: rec, error: recerr } = await supabaseClient
         .from("transactions")
         .select("*")
         .eq("receiver", (await user).data?.user?.id);
-      console.log(rec);
-      console.log(recerr);
       if (rec === null) return;
       setReceivedOffrs(rec);
     }
     loadOffrs().catch((err) => console.error(err));
   }, []);
+  const tabs = [
+    {
+      name: "all",
+      text: "Összes",
+    },
+    {
+      name: "request",
+      text: "Elküldött",
+    },
+    {
+      name: "request",
+      text: "Kapott",
+    },
+    {
+      name: "accepted",
+      text: "Elfogadott",
+    },
+  ];
+  function getTimeInText(stringdate: string | null): string {
+    if (!stringdate) {
+      return "nincs idő";
+    }
+    const date = new Date(stringdate);
+
+    return "idő";
+  }
   return (
     <div className="mx-auto w-[80%]">
-      <h2>Elküldött Ajánlatok</h2>
-      <div className="mx-auto">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="checkbox-primary checkbox rounded-none"
-                  />
-                </label>
-              </th>
-              <th>id</th>
-              <th>időpont</th>
-              <th>kezdeményező</th>
-              <th>fogadó</th>
-              <th>státusz</th>
-            </tr>
-          </thead>
-          <tbody>
-            {offrs?.map((x) => (
-              <tr key={x.id}>
-                <th>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      className="checkbox-primary checkbox rounded-none"
-                    />
-                  </label>
-                </th>
-
-                <th>{x.id}</th>
-                <td>{x.created_at}</td>
-                <td>{x.initiator}</td>
-                <td>{x.receiver}</td>
-                <td>{x.status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="tabs flex justify-center">
+        {tabs.map((x, id) => (
+          <h2
+            key={id}
+            className={`tab-bordered tab ${
+              activetabindex === id && "tab-active"
+            }`}
+            onClick={() => setActivetabindex(id)}
+          >
+            {x.text}
+          </h2>
+        ))}
       </div>
-      <h2>Kapott Ajánlatok</h2>
-      <div className="mx-auto">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="checkbox-primary checkbox rounded-none"
-                  />
-                </label>
-              </th>
-              <th>id</th>
-              <th>időpont</th>
-              <th>kezdeményező</th>
-              <th>fogadó</th>
-              <th>státusz</th>
-              <th>Akció</th>
-            </tr>
-          </thead>
-          <tbody>
-            {receivedoffrs?.map((x) => (
-              <tr key={x.id}>
-                <th>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      className="checkbox-primary checkbox rounded-none"
-                    />
-                  </label>
-                </th>
-                <th>{x.id}</th>
-                <td>{x.created_at}</td>
-                <td>{x.initiator}</td>
-                <td>{x.receiver}</td>
-                <td>{x.status}</td>
-                <td>
-                  <button className="btn bg-maindark text-white hover:bg-maindark hover:opacity-80">
-                    Tovább
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {offerslist && (
+        <div className="mx-auto">
+          {offerslist.map((x) => (
+            <div className="w-full rounded-md bg-base-200 px-6 py-2">
+              {getTimeInText(x.created_at)}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
