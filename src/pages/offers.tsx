@@ -62,7 +62,7 @@ const Offers = () => {
           <h2
             key={id}
             className={`tab-bordered tab ${
-              activetabindex === id && "tab-active"
+              activetabindex === id ? "tab-active" :""
             }`}
             onClick={() => setActivetabindex(id)}
           >
@@ -73,7 +73,7 @@ const Offers = () => {
       {offerslist && (
         <div className="mx-auto">
           {offerslist.map((x) => (
-            <div className="w-full rounded-md bg-base-200 px-6 py-2">
+            <div key={x.id} className="w-full rounded-md bg-base-200 px-6 py-2">
               {getTimeInText(x.created_at)}
             </div>
           ))}
