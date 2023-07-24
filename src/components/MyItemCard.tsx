@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import Image from "next/image";
 import type { Database } from "lib/database.types";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import dayjs from "mydayjs";
 
 const MyItemCard = (props: {
   item: Database["public"]["Tables"]["items"]["Row"];
@@ -39,14 +40,15 @@ const MyItemCard = (props: {
           src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${
             img_name ? img_name : ""
           }`}
-          alt="Shoes"
+          alt="kép"
         />
       </figure>
       <div className="card-body relative">
         <h2 className="card-title">{title}</h2>
         <p>{desc}</p>
+        <p className="text-right text-sm">{dayjs().fromNow()}</p>
         <div className="card-actions justify-end">
-          <button className="btn bg-maindark text-white">
+          <button className="btn bg-maindark text-white hover:opacity-80 hover:bg-maindark">
             Csere kérések megtekintése
           </button>
         </div>

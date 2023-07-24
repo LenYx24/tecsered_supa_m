@@ -56,6 +56,10 @@ function Myitems() {
           .eq("user_id", id);
         if (newdat === null) return;
         setItemsarr(newdat);
+        setName("")
+        setDesc("")
+        setPrice("")
+        setImage("")
         console.log(newdat);
       }
     };
