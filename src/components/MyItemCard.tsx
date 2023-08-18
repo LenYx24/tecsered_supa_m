@@ -48,7 +48,7 @@ const MyItemCard = (props: {
         <p>{desc}</p>
         <p className="text-right text-sm">{dayjs().fromNow()}</p>
         <div className="card-actions justify-end">
-          <button className="btn bg-maindark text-white hover:opacity-80 hover:bg-maindark">
+          <button className="btn bg-maindark text-white hover:bg-maindark hover:opacity-80">
             Csere kérések megtekintése
           </button>
         </div>
@@ -67,7 +67,14 @@ const MyItemCard = (props: {
             Biztos vagy benne hogy törlöd ezt a tárgyat a gyüjteményedből?
           </p>
           <div className="modal-action">
-            <label htmlFor="my_modal" className="btn" onClick={handleDelete}>
+            <label htmlFor="my_modal" className="btn">
+              Nem
+            </label>
+            <label
+              htmlFor="my_modal"
+              className="btn-error btn"
+              onClick={handleDelete}
+            >
               Igen
             </label>
           </div>

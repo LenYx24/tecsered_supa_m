@@ -23,8 +23,8 @@ const Card = ({
       .catch((err) => console.log(err));
   };
   return (
-    <div className="my-4 border-2 border-main shadow-xl md:w-96">
-      <figure className="mt-2 flex justify-center border-b-2 border-main">
+    <div className="my-4 bg-white shadow-xl md:w-96">
+      <figure className="mt-2 flex justify-center">
         <Image
           width={200}
           height={200}

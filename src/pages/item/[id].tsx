@@ -38,7 +38,7 @@ export default function Page() {
       .catch((err) => console.log(err));
   };
   return (
-    <div className="">
+    <div>
       {item ? (
         <div className="bg-white px-2 py-4 shadow-xl md:px-16">
           <figure className="flex justify-center border-b-2 border-main pt-2">
