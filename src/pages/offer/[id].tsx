@@ -1,19 +1,21 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "lib/database.types";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import status from "../../statustabs";
 import Image from "next/image";
 
 export default function Page() {
   const router = useRouter();
   const supabase = useSupabaseClient<Database>();
+  const [modaltext, setModaltext] = useState<string | null>("null");
   const [item, setItem] = useState<
     Database["public"]["Views"]["transactions_with_usernames"]["Row"] | null
   >(null);
   const [transactionitems, setTransactionitems] = useState<
     Database["public"]["Views"]["transitemdata"]["Row"][] | null
   >();
+  const myref = useRef<HTMLDialogElement>(null);
   const user = useUser();
   useEffect(() => {
     const load = async () => {
@@ -39,10 +41,16 @@ export default function Page() {
     // létrejön egy új sor a chat táblában, ahol tárolva van a sor id, a két fél id-ja, és a trans_id
     if (item?.receiver !== user?.id) return; // ha a felhasználó nem kapta az ajánlatot akkor nyilván nem fogadhatja el
     async function kljj() {
-      await supabase
+      const data = await supabase
         .from("transactions")
         .update({ status: "accepted" })
         .eq("id", item?.id);
+      console.log(data);
+      if (data.error)
+        setModaltext(
+          "Nem sikerült elfogadnod a csereajánlatot! Próbáld meg később!"
+        );
+      else setModaltext("Sikeresen elfogadtad a cserét");
     }
     kljj().catch((x) => console.log(x));
   }
@@ -59,6 +67,16 @@ export default function Page() {
   }
   return (
     <div className="bg-white px-2 py-4 shadow-xl md:px-16">
+      <dialog id="my_modal_1" ref={myref} className="modal">
+        <form method="dialog" className="modal-box">
+          <h3 className="text-lg font-bold">{modaltext}</h3>
+          <div className="modal-action">
+            <button className="btn-ghost btn-sm btn-circle btn absolute right-2 top-2">
+              ✕
+            </button>
+          </div>
+        </form>
+      </dialog>
       {item ? (
         <div className="md:mx-auto md:w-[50vw]">
           <div className="mb-4 flex items-center justify-between">
@@ -136,11 +154,20 @@ export default function Page() {
         </div>
       </div>
       <div className="mx-auto mt-4 flex justify-center gap-4">
-        <button className="btn-primary btn" onClick={() => acceptTrade()}>
-          Elfogadás
-        </button>
+        {item?.status !== "accepted" ? (
+          <button
+            className="btn-primary btn"
+            onClick={() => {
+              acceptTrade();
+              myref.current?.showModal();
+            }}
+          >
+            Elfogadás
+          </button>
+        ) : null}
+
         <button className="btn-error btn" onClick={() => declineTrade()}>
-          Törlés
+          Elutasítás
         </button>
       </div>
     </div>
