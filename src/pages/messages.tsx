@@ -26,8 +26,12 @@ const Messages = () => {
     }
     getData().catch((err) => console.log(err));
   }, []);
-  function handleMessagesent() {}
-  function handleChatchange() {}
+  function handleMessagesent() {
+    console.log("empty function aahahah");
+  }
+  function handleChatchange() {
+    console.log("empty function aahahah");
+  }
   return (
     <div className="pt-2">
       {trans ? (
@@ -35,11 +39,14 @@ const Messages = () => {
           <div className="hidden md:block">
             {trans.map((item) => (
               <div
-                className=" hover:pointer w-full rounded-md border-b border-black bg-white px-6 py-2 text-center hover:bg-main md:text-left"
+                className="hover:pointer w-full rounded-md border-b border-black bg-white px-6 py-2 text-center hover:bg-main md:text-left"
                 key={item.id}
                 onClick={handleChatchange}
               >
-                <Link href={`offer/${item.id}`} className="link underline">
+                <Link
+                  href={`offer/${item.id ? item.id : ""}`}
+                  className="link underline"
+                >
                   Ajánlat azonosító: {item.id}
                 </Link>
                 <div className="link avatar mx-6">
@@ -76,7 +83,7 @@ const Messages = () => {
             <div>
               <div className="chat chat-start">
                 <div className="chat-bubble">
-                  It's over Anakin, <br />I have the high ground.
+                  It&aposs over Anakin, <br />I have the high ground.
                 </div>
               </div>
               <div className="chat chat-end">
