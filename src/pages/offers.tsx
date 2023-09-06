@@ -31,7 +31,7 @@ const Offers = () => {
       const { data, error } = await supabaseClient
         .from("transactions_with_usernames")
         .select("*")
-        .eq("initiator", (await user).data?.user?.id);
+        .eq("initiator", user?.id);
         if(data === null)return;
         data.map(async(transaction)=>{
           const {data:item_id_req_data} = await supabaseClient.from("transaction_item").select("item_id").eq("trans_id",transaction.id)
