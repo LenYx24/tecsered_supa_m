@@ -31,7 +31,6 @@ const Offers = () => {
       const { data, error } = await supabaseClient
         .from("transactions_with_usernames")
         .select("*")
-<<<<<<< HEAD
         .eq("initiator", (await user).data?.user?.id);
         if(data === null)return;
         data.map(async(transaction)=>{
@@ -45,12 +44,6 @@ const Offers = () => {
       console.log(testreq)
         fdata = data;
     } else if(tabs[activetabindex]?.name === "received"){
-=======
-        .eq("initiator", user?.id);
-      if (data === null) return;
-      fdata = data;
-    } else if (tabs[id]?.name === "received") {
->>>>>>> 2b9cfeabc865a8eb96e13d4487f5138fd174a3e7
       const { data, error } = await supabaseClient
         .from("transactions_with_usernames")
         .select("*")
