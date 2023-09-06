@@ -34,7 +34,7 @@ const Offers = () => {
             const {data:items_req_data} = await supabaseClient.from("items").select("*").eq("id",item_id.item_id)
           })
         })
-      const testreq = await supabaseClient.from("transactions").select("*, transaction_item(*)")
+      const testreq = await supabaseClient.from("transactions").select("*, transaction_item(*, items(*))")
       console.log(testreq)
         fdata = data;
     } else if(tabs[activetabindex]?.name === "received"){
