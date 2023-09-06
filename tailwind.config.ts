@@ -10,6 +10,9 @@ export default {
         unique: "#E16F7C",
         uniquedark: "#6C3747",
       },
+      gridTemplateColumns: {
+        "grid-chat": "1fr 1.5fr",
+      },
     },
   },
   plugins: [require("daisyui")],

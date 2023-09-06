@@ -1,10 +1,16 @@
-import { useUser } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { Database } from "lib/database.types";
 import Link from "next/link";
 import React from "react";
 
 const Account = () => {
+  const supabaseClient = useSupabaseClient<Database>();
   const user = useUser();
-  console.log(user?.user_metadata);
+  const handlelogout = () => {
+    if (user) {
+      supabaseClient.auth.signOut().catch((err) => console.log(err));
+    }
+  };
   if (!user)
     return (
       <div className="pt-4 text-center text-2xl">
@@ -85,7 +91,15 @@ const Account = () => {
         </div>
 
         <div className=" text-maindark">{user.email}</div>
-        <div className="">@{user.user_metadata.username}</div>
+        <div className="">@{user.user_metadata.first_name}</div>
+        <div>
+          <button
+            className="rounded-lg bg-unique px-4 py-2 text-white hover:bg-unique hover:text-white hover:opacity-80"
+            onClick={handlelogout}
+          >
+            Kijelentkezés
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -3,9 +3,11 @@ import type { Database } from "lib/database.types";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Offertable from "~/components/Offertable";
 
 const Offermaker = () => {
   const router = useRouter();
+  const [activetabindex, setActivetabindex] = useState<number>(0);
   const [allItems, setAllItems] =
     useState<Database["public"]["Tables"]["items"]["Row"][]>();
   const [myItems, setMyItems] = useState<
@@ -85,94 +87,80 @@ const Offermaker = () => {
     handle().catch((err) => console.error(err));
   }
   const user = useUser();
-
+  async function getitems() {
+    if (router.query.userid === undefined) return;
+    if (user === null) return;
+    const { data } = await supabaseClient
+      .from("items")
+      .select("*")
+      .in("user_id", [router.query.userid, user.id]);
+    if (data !== null) setAllItems(data);
+    console.log(data);
+  }
   useEffect(() => {
-    async function getitems() {
-      if (router.query.userid === undefined) return;
-      if (user === null) return;
-      const { data } = await supabaseClient
-        .from("items")
-        .select("*")
-        .in("user_id", [user.id, router.query.userid]);
-      if (data !== null) setAllItems(data);
-      console.log(data);
-    }
     getitems().catch((err) => console.error(err));
   }, [router.query.userid, supabaseClient, user]);
+  const tabs = ["Kezdeményező", "Fogadó"] as const;
+  function handleTabClick(id: number) {
+    setActivetabindex(id);
+  }
   return (
     <div className="mx-auto grid w-[90%] lg:grid-cols-2">
       <div className="mx-5 bg-base-200 ">
+        {tabs.map((x, id) => (
+          <h2
+            key={id}
+            className={`tab-bordered tab ${
+              id === activetabindex ? "tab-active" : ""
+            }`}
+            onClick={() => handleTabClick(id)}
+          >
+            {x}
+          </h2>
+        ))}
         {/* <input
           placeholder="keresés"
           className="input-bordered input-primary input w-full max-w-xs"
         /> */}
         <div>
-          {allItems?.map((item) => {
-            return (
-              <div className="m-2 flex gap-5 shadow-xl" key={item.id}>
-                <Image
-                  width={120}
-                  height={120}
-                  src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${
-                    item.img_name ? item.img_name : ""
-                  }`}
-                  alt="Shoes"
-                  className="hover:cursor-pointer"
-                  onClick={() => handleAllItemsClick(item)}
-                />
-                <h2
-                  className={
-                    user?.id === item.user_id ? "text-blue-500" : "text-red-500"
-                  }
-                >
-                  {item.title}
-                </h2>
-              </div>
-            );
-          })}
+          {allItems
+            ?.filter((x) => {
+              if (activetabindex === 0) return x.user_id === user?.id;
+              else return x.user_id !== user?.id;
+            })
+            .map((item) => {
+              return (
+                <div className="m-2 flex gap-5 shadow-xl" key={item.id}>
+                  <Image
+                    width={120}
+                    height={120}
+                    src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${
+                      item.img_name ? item.img_name : ""
+                    }`}
+                    alt="Shoes"
+                    className="hover:cursor-pointer"
+                    onClick={() => handleAllItemsClick(item)}
+                  />
+                  <h2
+                    className={
+                      user?.id === item.user_id
+                        ? "text-blue-500"
+                        : "text-red-500"
+                    }
+                  >
+                    {item.title}
+                  </h2>
+                </div>
+              );
+            })}
         </div>
       </div>
       <div>
-        <div className="min-h-[20vh] border border-base-300 bg-base-200">
-          <h2>Cserélni kívánt tárgyaid</h2>
-          {myItems?.map((item) => {
-            return (
-              <div className="m-2 flex gap-5 shadow-xl" key={item.id}>
-                <Image
-                  width={120}
-                  height={120}
-                  src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${
-                    item.img_name ? item.img_name : ""
-                  }`}
-                  alt="Shoes"
-                  className="hover:cursor-pointer"
-                  onClick={() => handlePutBackClick(item)}
-                />
-                <h2 className="">{item.title}</h2>
-              </div>
-            );
-          })}
-        </div>
-        <div className="min-h-[20vh] border border-base-300 bg-base-200">
-          <h2>Másik fél tárgyai</h2>
-          {theirItems?.map((item) => {
-            return (
-              <div className="m-2 flex gap-5 shadow-xl" key={item.id}>
-                <Image
-                  width={120}
-                  height={120}
-                  src={`https://squaoauhjrlvmrvyrheb.supabase.co/storage/v1/object/public/items/${
-                    item.img_name ? item.img_name : ""
-                  }`}
-                  alt="Shoes"
-                  className="hover:cursor-pointer"
-                  onClick={() => handlePutBackClick(item)}
-                />
-                <h2 className="">{item.title}</h2>
-              </div>
-            );
-          })}
-        </div>
+        <Offertable
+          myItems={myItems}
+          theirItems={theirItems}
+          handlePutBackClick={handlePutBackClick}
+        ></Offertable>
         <div className="mx-auto">
           <button className="btn-primary btn" onClick={handleTradeRequest}>
             Csereajánlat küldése

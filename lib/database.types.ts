@@ -160,6 +160,12 @@ export interface Database {
             columns: ["trans_id"]
             referencedRelation: "transactions"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_item_trans_id_fkey"
+            columns: ["trans_id"]
+            referencedRelation: "transactions_with_usernames"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -238,6 +244,80 @@ export interface Database {
             foreignKeyName: "items_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      transactions_with_usernames: {
+        Row: {
+          created_at: string | null
+          id: number | null
+          initiator: string | null
+          initiator_username: string | null
+          receiver: string | null
+          receiver_username: string | null
+          status: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_initiator_fkey"
+            columns: ["initiator"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_receiver_fkey"
+            columns: ["receiver"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      transitemdata: {
+        Row: {
+          desc: string | null
+          id: number | null
+          img_name: string | null
+          item_id: number | null
+          title: string | null
+          trans_id: number | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "items_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_item_item_id_fkey"
+            columns: ["item_id"]
+            referencedRelation: "items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_item_item_id_fkey"
+            columns: ["item_id"]
+            referencedRelation: "itemswithfirstname"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_item_item_id_fkey"
+            columns: ["item_id"]
+            referencedRelation: "itemswithusername"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_item_trans_id_fkey"
+            columns: ["trans_id"]
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_item_trans_id_fkey"
+            columns: ["trans_id"]
+            referencedRelation: "transactions_with_usernames"
             referencedColumns: ["id"]
           }
         ]

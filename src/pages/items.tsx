@@ -5,7 +5,7 @@ export default function Items() {
   const { itemsarr, loading } = useItems();
   return (
     <div className="mx-auto px-4 pt-5 md:w-[80%]">
-      <h1 className="border-b border-t text-center text-[2rem] ">Tárgyak</h1>
+      <h1 className="text-center text-[2rem] ">Tárgyak</h1>
       <div className="hidden justify-between pb-5 md:flex">
         <div className="breadcrumbs w-[20vw] text-sm">
           <ul>
